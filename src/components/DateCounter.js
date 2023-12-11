@@ -47,10 +47,6 @@ function DateCounter() {
     dispatch({ type: "setStep", payload: Number(e.target.value) });
   };
 
-  const reset = function () {
-    dispatch({ type: "reset" });
-  };
-
   return (
     <div className="counter">
       <div>
@@ -73,7 +69,7 @@ function DateCounter() {
       <p>{date.toDateString()}</p>
 
       <div>
-        <button onClick={reset}>Reset</button>
+        <button onClick={() => dispatch({ type: "reset" })}>Reset</button>
       </div>
     </div>
   );
