@@ -7,6 +7,7 @@ import StartScreen from "./components/StartScreen";
 import Question from "./components/Question";
 import Options from "./components/Options";
 import NextButton from "./components/NextButton";
+import Progress from "./components/Progress";
 
 const initialState = {
   questions: [],
@@ -52,11 +53,13 @@ function reducer(state, action) {
 }
 
 function App() {
-  const [{ questions, status, index, answer }, dispatch] = useReducer(
+  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
     reducer,
     initialState
   );
+
   const questionsAmount = questions.length;
+  const totalPoints = questions.reduce((acc, curr) => acc + curr.points, 0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,13 +85,22 @@ function App() {
           <StartScreen questionsAmount={questionsAmount} dispatch={dispatch} />
         )}
         {status === "active" && (
-          <Question question={questions[index]}>
-            <Options
-              question={questions[index]}
-              dispatch={dispatch}
+          <>
+            <Progress
+              index={index}
+              questionsAmount={questionsAmount}
+              points={points}
+              totalPoints={totalPoints}
               answer={answer}
             />
-          </Question>
+            <Question question={questions[index]}>
+              <Options
+                question={questions[index]}
+                dispatch={dispatch}
+                answer={answer}
+              />
+            </Question>
+          </>
         )}
         <NextButton dispatch={dispatch} answer={answer} />
       </Main>
