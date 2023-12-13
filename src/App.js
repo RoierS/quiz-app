@@ -11,6 +11,9 @@ import Progress from "./components/Progress";
 import FinishScreen from "./components/FinishScreen";
 import Footer from "./components/Footer";
 import Timer from "./components/Timer";
+import DifficultySelection from "./components/DifficultySelection";
+import RestartButton from "./components/RestartButton";
+import StartButton from "./components/StartButton";
 
 const SECS_PER_QUESTION = 30;
 
@@ -22,19 +25,37 @@ const initialState = {
 
   // current question
   index: 0,
+
   answer: null,
   points: 0,
-  highscore: 0,
+  highscore: "",
   secondsRemaining: null,
+
+  // difficulty selection
+  all: [],
+  easy: [],
+  medium: [],
+  hard: [],
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "dataReceived":
-      return { ...state, questions: action.payload, status: "ready" };
+      return {
+        ...state,
+        questions: action.payload,
+        status: "ready",
+        all: action.payload,
+        easy: action.payload.filter((q) => q.points === 10),
+        medium: action.payload.filter((q) => q.points === 20),
+        hard: action.payload.filter((q) => q.points === 30),
+      };
 
     case "dataFailed":
       return { ...state, status: "error" };
+
+    case "selectDifficulty":
+      return { ...state, questions: state[action.payload] };
 
     case "start":
       return {
@@ -71,8 +92,8 @@ function reducer(state, action) {
     case "restart":
       return {
         ...initialState,
-        questions: state.questions,
-        status: "ready",
+        questions: [],
+        status: "loading",
         highscore: state.highscore,
       };
 
@@ -99,19 +120,19 @@ function App() {
   ] = useReducer(reducer, initialState);
 
   const questionsAmount = questions.length;
+
   const totalPoints = questions.reduce((acc, curr) => acc + curr.points, 0);
 
+  const fetchData = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/questions");
+      const data = await res.json();
+      dispatch({ type: "dataReceived", payload: data });
+    } catch (error) {
+      dispatch({ type: "dataFailed" });
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("http://localhost:8000/questions");
-        const data = await res.json();
-        dispatch({ type: "dataReceived", payload: data });
-      } catch (error) {
-        dispatch({ type: "dataFailed" });
-      }
-    };
-
     fetchData();
   }, []);
 
@@ -125,7 +146,10 @@ function App() {
         {status === "error" && <Error />}
 
         {status === "ready" && (
-          <StartScreen questionsAmount={questionsAmount} dispatch={dispatch} />
+          <StartScreen questionsAmount={questionsAmount} dispatch={dispatch}>
+            <DifficultySelection questions={questions} dispatch={dispatch} />
+            <StartButton dispatch={dispatch} />
+          </StartScreen>
         )}
 
         {status === "active" && (
@@ -162,9 +186,10 @@ function App() {
           <FinishScreen
             points={points}
             totalPoints={totalPoints}
-            dispatch={dispatch}
             highscore={highscore}
-          />
+          >
+            <RestartButton dispatch={dispatch} restartQuiz={fetchData} />
+          </FinishScreen>
         )}
       </Main>
     </div>

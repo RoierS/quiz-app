@@ -144,6 +144,17 @@ progress {
   float: right;
 }
 
+select.btn-ui {
+  margin-bottom: 1.6rem;
+}
+
+.difficulty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.6rem;
+}
+
 .options {
   display: flex;
   flex-direction: column;
