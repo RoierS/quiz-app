@@ -29,6 +29,22 @@ body {
   padding: 3.2rem;
 }
 
+select,
+button {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-right: 16px solid transparent;
+}
+select:focus,
+button:focus {
+  outline: none !important;
+}
+
 .app {
   display: flex;
   flex-direction: column;
@@ -37,15 +53,16 @@ body {
 }
 
 .main {
-  width: 50rem;
+  max-width: 50rem;
 }
 
 .app-header {
-  width: 66rem;
+  width: 97%;
   margin-bottom: 4rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 5%;
 }
 
 .error {
@@ -64,23 +81,28 @@ img {
 h1 {
   font-family: "Codystar";
   font-size: 5.6rem;
+  text-align: center;
 }
 
 h2 {
   font-size: 3.6rem;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 h3 {
   font-size: 2.4rem;
   font-weight: 600;
   margin-bottom: 4rem;
+  text-align: center;
 }
 
 h4 {
   font-size: 2.2rem;
   font-weight: 600;
   margin-bottom: 2.4rem;
+  text-align: center;
+  user-select: none;
 }
 
 .start {
@@ -144,8 +166,33 @@ progress {
   float: right;
 }
 
-select.btn-ui {
-  margin-bottom: 1.6rem;
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 180px;
+}
+.selectWrapper {
+  position: relative;
+  vertical-align: middle;
+}
+
+.difficulty h4 {
+  margin-bottom: 0;
+}
+
+.selectWrapper::after {
+  position: absolute;
+  content: "▼";
+  font-size: 1.6rem;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  vertical-align: middle;
+}
+
+select:focus-visible {
+  outline: none;
 }
 
 .difficulty {
@@ -153,6 +200,7 @@ select.btn-ui {
   justify-content: center;
   align-items: center;
   gap: 1.6rem;
+  margin-bottom: 1.6rem;
 }
 
 .options {
@@ -187,7 +235,7 @@ select.btn-ui {
   color: var(--color-light);
   border-radius: 100px;
   text-align: center;
-  padding: 2rem 0;
+  padding: 2rem 2rem;
   font-size: 2rem;
   font-weight: 500;
   margin-bottom: 1.6rem;
@@ -202,6 +250,7 @@ select.btn-ui {
   font-size: 1.8rem;
   text-align: center;
   margin-bottom: 4.8rem;
+  user-select: none;
 }
 
 .score {
@@ -233,6 +282,7 @@ select.btn-ui {
   border: 2px solid var(--color-dark);
   padding: 1.35rem 2.8rem;
   border-radius: 100px;
+  user-select: none;
 }
 
 /* CREDIT: https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
@@ -278,4 +328,25 @@ select.btn-ui {
 .counter * {
   font-size: inherit;
   padding: 0.8rem;
+}
+
+@media (max-width: 390px) {
+  body {
+    padding: 1.2rem;
+  }
+  h1 {
+    font-size: 4rem;
+  }
+  h2 {
+    font-size: 2.4rem;
+  }
+  h3 {
+    font-size: 1.8rem;
+  }
+  h4 {
+    font-size: 1.4rem;
+  }
+  img {
+    width: 10rem;
+  }
 }
