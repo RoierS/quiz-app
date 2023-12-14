@@ -1,4 +1,4 @@
-function FinishScreen({ points, totalPoints, highscore, dispatch, children }) {
+function FinishScreen({ points, totalPoints, highscore, children }) {
   const percentage = (points / totalPoints) * 100;
 
   let emoji;

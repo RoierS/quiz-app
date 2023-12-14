@@ -14,6 +14,7 @@ import Timer from "./components/Timer";
 import DifficultySelection from "./components/DifficultySelection";
 import RestartButton from "./components/RestartButton";
 import StartButton from "./components/StartButton";
+import Highscore from "./components/Highscore";
 
 const SECS_PER_QUESTION = 30;
 
@@ -28,7 +29,7 @@ const initialState = {
 
   answer: null,
   points: 0,
-  highscore: "",
+  highscore: localStorage.getItem("highscore") || "",
   secondsRemaining: null,
 
   // difficulty selection
@@ -82,11 +83,14 @@ function reducer(state, action) {
       return { ...state, index: state.index + 1, answer: null };
 
     case "finish":
+      const newHighscore =
+        state.points > state.highscore ? state.points : state.highscore;
+      localStorage.setItem("highscore", newHighscore);
+
       return {
         ...state,
         status: "finished",
-        highscore:
-          state.points > state.highscore ? state.points : state.highscore,
+        highscore: newHighscore,
       };
 
     case "restart":
@@ -94,7 +98,7 @@ function reducer(state, action) {
         ...initialState,
         questions: [],
         status: "loading",
-        highscore: state.highscore,
+        // highscore: state.highscore,
       };
 
     case "tick":
@@ -148,6 +152,7 @@ function App() {
         {status === "ready" && (
           <StartScreen questionsAmount={questionsAmount} dispatch={dispatch}>
             <DifficultySelection questions={questions} dispatch={dispatch} />
+            <Highscore highscore={highscore} />
             <StartButton dispatch={dispatch} />
           </StartScreen>
         )}
