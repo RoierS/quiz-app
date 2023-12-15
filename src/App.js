@@ -29,7 +29,7 @@ const initialState = {
 
   answer: null,
   points: 0,
-  highscore: localStorage.getItem("highscore") || "",
+  highscore: null,
   secondsRemaining: null,
 
   // difficulty selection
@@ -50,6 +50,12 @@ function reducer(state, action) {
         easy: action.payload.filter((q) => q.points === 10),
         medium: action.payload.filter((q) => q.points === 20),
         hard: action.payload.filter((q) => q.points === 30),
+      };
+    case "highscoreReceived":
+      return {
+        ...state,
+        status: "ready",
+        highscore: action.payload,
       };
 
     case "dataFailed":
@@ -85,7 +91,6 @@ function reducer(state, action) {
     case "finish":
       const newHighscore =
         state.points > state.highscore ? state.points : state.highscore;
-      localStorage.setItem("highscore", newHighscore);
 
       return {
         ...state,
@@ -98,7 +103,7 @@ function reducer(state, action) {
         ...initialState,
         questions: [],
         status: "loading",
-        // highscore: state.highscore,
+        highscore: state.highscore,
       };
 
     case "tick":
@@ -136,9 +141,46 @@ function App() {
       dispatch({ type: "dataFailed" });
     }
   };
+
+  // fetching guestions
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchHighscore = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/highscore");
+        const data = await res.json();
+        dispatch({ type: "highscoreReceived", payload: data.highscore });
+      } catch (error) {
+        dispatch({ type: "dataFailed" });
+      }
+    };
+
+    fetchHighscore();
+  }, []);
+
+  // posting the higsciore to API
+  useEffect(() => {
+    const postHighscore = async () => {
+      try {
+        await fetch("http://localhost:8000/highscore", {
+          method: "POST",
+          body: JSON.stringify({ highscore: highscore }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      } catch (error) {
+        dispatch({ type: "dataFailed" });
+      }
+    };
+
+    if (status === "finished") {
+      postHighscore();
+    }
+  }, [highscore, status]);
 
   return (
     <div className="app">
