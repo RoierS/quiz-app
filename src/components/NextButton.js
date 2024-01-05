@@ -1,4 +1,8 @@
-function NextButton({ dispatch, answer, index, questionsAmount }) {
+import { useQuizProvider } from "../hooks/useQuizProvider";
+
+function NextButton() {
+  const { dispatch, answer, index, questionsAmount } = useQuizProvider();
+
   if (answer === null) return;
 
   if (index < questionsAmount - 1)

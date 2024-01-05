@@ -1,4 +1,8 @@
-function StartButton({ dispatch }) {
+import { useQuizProvider } from "../hooks/useQuizProvider";
+
+function StartButton() {
+  const { dispatch } = useQuizProvider();
+
   return (
     <button
       onClick={() => {

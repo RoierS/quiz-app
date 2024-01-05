@@ -1,4 +1,8 @@
-function FinishScreen({ points, totalPoints, highscore, children }) {
+import { useQuizProvider } from "../hooks/useQuizProvider";
+
+function FinishScreen({ children }) {
+  const { points, totalPoints, highscore } = useQuizProvider();
+
   const percentage = (points / totalPoints) * 100;
 
   let emoji;

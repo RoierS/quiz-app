@@ -1,4 +1,8 @@
-function StartScreen({ questionsAmount, children }) {
+import { useQuizProvider } from "../hooks/useQuizProvider";
+
+function StartScreen({ children }) {
+  const { questionsAmount } = useQuizProvider();
+
   return (
     <div className="start">
       <h2>Welcome to The React Quiz!</h2>

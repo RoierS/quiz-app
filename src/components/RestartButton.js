@@ -1,10 +1,14 @@
-function RestartButton({ dispatch, restartQuiz }) {
+import { useQuizProvider } from "../hooks/useQuizProvider";
+
+function RestartButton() {
+  const { dispatch, fetchData } = useQuizProvider();
+
   return (
     <button
       className="btn btn-ui"
       onClick={() => {
         dispatch({ type: "restart" });
-        restartQuiz();
+        fetchData();
       }}
     >
       Restart Quiz

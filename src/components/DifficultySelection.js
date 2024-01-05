@@ -1,4 +1,8 @@
-function DifficultySelection({ dispatch }) {
+import { useQuizProvider } from "../hooks/useQuizProvider";
+
+function DifficultySelection() {
+  const { dispatch } = useQuizProvider();
+
   return (
     <div className="difficulty">
       <h4>Select the difficulty:</h4>

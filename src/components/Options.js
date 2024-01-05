@@ -1,11 +1,15 @@
-function Options({ question, answer, dispatch }) {
+import { useQuizProvider } from "../hooks/useQuizProvider";
+
+function Options() {
+  const { currentQuestion, answer, dispatch } = useQuizProvider();
+
   return (
     <div className="options">
-      {question.options.map((option, i) => (
+      {currentQuestion.options.map((option, i) => (
         <button
           className={`btn btn-option ${i === answer ? "answer" : ""} ${
             answer !== null
-              ? i === question.correctOption
+              ? i === currentQuestion.correctOption
                 ? "correct"
                 : "wrong"
               : ""
