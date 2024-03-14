@@ -1,6 +1,7 @@
 import { createContext, useEffect, useReducer } from "react";
 
 const SECS_PER_QUESTION = 30;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const initialState = {
   questions: [],
@@ -122,7 +123,7 @@ const QuizProvider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("http://localhost:8000/questions");
+      const res = await fetch(`${BASE_URL}/questions`);
       const data = await res.json();
       dispatch({ type: "dataReceived", payload: data });
     } catch (error) {
@@ -138,7 +139,7 @@ const QuizProvider = ({ children }) => {
   useEffect(() => {
     const fetchHighscore = async () => {
       try {
-        const res = await fetch("http://localhost:8000/highscore");
+        const res = await fetch(`${BASE_URL}/highscore`);
         const data = await res.json();
         dispatch({ type: "highscoreReceived", payload: data.highscore });
       } catch (error) {
@@ -153,7 +154,7 @@ const QuizProvider = ({ children }) => {
   useEffect(() => {
     const postHighscore = async () => {
       try {
-        await fetch("http://localhost:8000/highscore", {
+        await fetch(`${BASE_URL}/highscore`, {
           method: "POST",
           body: JSON.stringify({ highscore: highscore }),
           headers: {
